@@ -1,6 +1,0 @@
-libgl1-mesa-glx
-libglib2.0-0
-gcc
-python3-dev
-libgomp1
-libopenblas-dev
