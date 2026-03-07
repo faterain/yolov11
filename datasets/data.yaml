@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 3
+names: ['Early-Blight', 'Healthy-plant', 'Late-Blight']
+
+roboflow:
+  workspace: final-year-project-9cf4g
+  project: potato-disease-balnv
+  version: 2
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/final-year-project-9cf4g/potato-disease-balnv/dataset/2
