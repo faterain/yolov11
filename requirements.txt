@@ -1,19 +1,22 @@
-# Streamlit Web框架核心（适配云端）
+# 基础配置：指定国内源+PyTorch CPU源（加速安装）
+--extra-index-url https://download.pytorch.org/whl/cpu
+--extra-index-url https://pypi.tuna.tsinghua.edu.cn/simple/
+
+# Streamlit核心（适配云端版本）
 streamlit==1.40.1
 
-# 图片/数据处理核心依赖（跨平台）
-numpy==1.26.4
-pandas==2.3.3
-Pillow==10.4.0
-opencv-python-headless==4.12.0.88  # 无GUI版，适配Linux云端，替代原版opencv-python
+# 图片/数据处理（跨平台，无GUI依赖）
+numpy==1.26.4          # 适配Python3.10，避免版本过高
+pandas==2.3.3          # 若用Excel导出需保留
+Pillow==10.4.0         # 图片处理核心
+opencv-python-headless==4.12.0.88  # Linux无GUI版，替代opencv-python
 
-# YOLOv11核心依赖（CPU版，避免GPU编译，适配Streamlit Cloud）
-torch==2.4.1+cpu --find-links https://download.pytorch.org/whl/cpu/torch_stable.html
-torchvision==0.19.1+cpu --find-links https://download.pytorch.org/whl/cpu/torch_stable.html
-ultralytics==8.1.0  # 官方稳定版，确保YOLO能正常导入，剔除非合规的8.3.248
+# YOLOv11核心（CPU版，避免GPU编译）
+torch==2.4.1+cpu       # 固定CPU版，适配Streamlit Cloud
+torchvision==0.19.1+cpu
+ultralytics==8.1.0     # 官方稳定版，确保YOLO能导入
 
-# 其他必要辅助包（精简版）
+# 辅助依赖（精简版）
 PyYAML==6.0.3
 tqdm==4.67.1
 requests==2.32.4
-typing-extensions==4.13.2
