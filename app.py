@@ -8,14 +8,46 @@ import numpy as np
 st.set_page_config(page_title="土豆病害检测系统", layout="wide")
 st.title("🍅 改进YOLOv11土豆病害检测系统")
 
-# 加载模型（支持ONNX/PT格式）
+# ---------------------- 模型选择配置 ----------------------
+# 定义可选模型（键：显示名称，值：模型路径）
+AVAILABLE_MODELS = {
+    
+    "YOLOv11n": "ultralytics\\ultralytics\\runs\\detect\\train\\yolov11n\\weights\\best.pt",
+    "YOLOv11n+hpa": "ultralytics\\ultralytics\\runs\\detect\\train\\yolov11n+hpa\\weights\\best.pt",
+    "YOLOv11n+ATFL": "ultralytics\\ultralytics\\runs\\detect\\train\\yolov11n+ATFL\\weights\\best.pt",
+    "YOLOv11n+transformer": "ultralytics\\ultralytics\\runs\\detect\\train\\yolov11n+transformer\\weights\\best.pt",
+    "YOLOv11n+hpa+transformer+ATFL": "ultralytics\\ultralytics\\runs\\detect\\train\\yolov11n+hpa+transformer+ATFL\\weights\\best.pt",
+    # 可添加更多模型路径，示例：
+    # "YOLOv11s 土豆病害检测": "path/to/yolov11s/best.pt",
+    # "YOLOv11m 土豆病害检测": "path/to/yolov11m/best.pt",
+    # "ONNX格式模型": "path/to/model.onnx"
+}
+
+# 侧边栏模型选择
+st.sidebar.header("⚙️ 模型配置")
+selected_model_name = st.sidebar.selectbox(
+    "选择检测模型",
+    options=list(AVAILABLE_MODELS.keys()),
+    index=0  # 默认选中第一个模型
+)
+
+# 加载选中的模型（带缓存）
 @st.cache_resource
-def load_model():
-    model = YOLO("best.onnx")  # 替换为你的模型路径
-    return model
+def load_selected_model(model_path):
+    """加载指定路径的模型，缓存避免重复加载"""
+    try:
+        model = YOLO(model_path)
+        st.sidebar.success(f"✅ 模型加载成功：{selected_model_name}")
+        return model
+    except Exception as e:
+        st.sidebar.error(f"❌ 模型加载失败：{str(e)}")
+        st.stop()
 
-model = load_model()
+# 获取选中模型的路径并加载
+selected_model_path = AVAILABLE_MODELS[selected_model_name]
+model = load_selected_model(selected_model_path)
 
+# ---------------------- 核心检测功能 ----------------------
 # 上传图片
 uploaded_file = st.file_uploader("上传土豆叶片图片", type=["jpg", "png", "jpeg"])
 if uploaded_file is not None:
